@@ -10,7 +10,7 @@ if ACCESS_TOKEN is None:
     raise ValueError("ACCESS_TOKEN can't be None")
 PROJECTS_REGEX_BASE = os.environ.get(
     "PROJECTS_REGEX_BASE",
-    "^courses/fundamentals-of-industrial-programming-2025/fundamentals-of-industrial-programming-2025-\\d+/(Java|Golang)+$",
+    "^courses/fundamentals-of-industrial-programming-2025/fundamentals-of-industrial-programming-2025-\\d+/(Java|Golang|Python)+$",
 )
 TECH_TASKS_REGEX_BASE = os.environ.get(
     "TECH_TASKS_REGEX_BASE",
