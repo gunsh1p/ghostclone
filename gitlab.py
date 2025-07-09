@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import re
 from base64 import b64decode
+import time
 
 import httpx
 
@@ -38,7 +39,7 @@ class Pipeline:
         }
 
 
-def get_projects_by_page(per_page: int = 50, page: int = 1) -> list[dict]:
+def get_projects_by_page(per_page: int = 250, page: int = 1) -> list[dict]:
     url = config.API_BASE + "/projects"
     params = {
         "per_page": per_page,
@@ -47,7 +48,7 @@ def get_projects_by_page(per_page: int = 50, page: int = 1) -> list[dict]:
         "search": config.PROJECT_TEMPLATE_BASE,
     }
     with httpx.Client(headers=headers) as client:
-        response = client.get(url=url, params=params, timeout=10.0)
+        response = client.get(url=url, params=params, timeout=20.0)
         response.raise_for_status()
     projects = response.json()
     return projects
@@ -88,10 +89,11 @@ def get_projects() -> list[GitProject]:
 def get_forks(project: GitProject) -> list[GitProject]:
     url = config.API_BASE + "/projects/" + str(project.id) + "/forks"
     with httpx.Client(headers=headers) as client:
-        response = client.get(url=url, timeout=10.0)
+        response = client.get(url=url, timeout=20.0)
         response.raise_for_status()
     projects = response.json()
     projects = [dict_to_git_project(proj, project.type) for proj in projects]
+    time.sleep(5)
     return projects
 
 

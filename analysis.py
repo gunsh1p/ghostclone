@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import re
 from urllib.parse import quote_plus
 import zipfile
+import time
 
 from gitlab import (
     GitProject,
@@ -149,6 +150,7 @@ def get_parsed_project(project: GitProject, tech_task: str) -> ParsedProject:
     pipelines = get_pipelines(project.id)
     zip_repisitory(project.id)
     delete_repo()
+    time.sleep(5)
     return ParsedProject(
         id=project.id, tech_task=tech_task, commits_logs=commits_logs, pipelines=pipelines
     )
