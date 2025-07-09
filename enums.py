@@ -4,6 +4,7 @@ from enum import Enum
 class ProjectType(str, Enum):
     JAVA = "Java"
     GO = "Golang"
+    PYTHON = "Python"
 
 
 class PipelineStatus(str, Enum):

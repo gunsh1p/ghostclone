@@ -1,5 +1,6 @@
 import logging
 import sys
+import time
 
 from gitlab import get_projects, get_forks
 from analysis import get_parsed_project, get_tech_task, ParsedProject
@@ -18,6 +19,7 @@ def main():
     for proj in projects:
         temp_forks = get_forks(proj)
         forks[proj] = temp_forks
+        time.sleep(10)
     del projects
     total_forks_count = sum(len(v) for v in forks.values())
     logging.info(f"Recieved {total_forks_count} forks")

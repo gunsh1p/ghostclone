@@ -40,7 +40,12 @@ class Pipeline:
 
 def get_projects_by_page(per_page: int = 50, page: int = 1) -> list[dict]:
     url = config.API_BASE + "/projects"
-    params = {"per_page": per_page, "page": page}
+    params = {
+        "per_page": per_page,
+        "page": page,
+        "search_namespaces": "true",
+        "search": config.PROJECT_TEMPLATE_BASE,
+    }
     with httpx.Client(headers=headers) as client:
         response = client.get(url=url, params=params, timeout=10.0)
         response.raise_for_status()
