@@ -34,7 +34,11 @@ class ParsedProject:
 
 def clone_repo(ssh_url: str) -> None:
     cmd = f"git clone {ssh_url} tmp".split()
-    subprocess.call(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    p = subprocess.Popen(cmd)
+    p.communicate(config.ACCESS_TOKEN)
+    p.communicate(config.ACCESS_TOKEN)
+    p.wait()
+    p.terminate()
 
 
 def get_all_branches() -> list[str]:
@@ -129,7 +133,10 @@ def create_zip_exclude_git(source_dir, zipf: zipfile.ZipFile) -> None:
         for file in files:
             file_path = os.path.join(root, file)
             arc_path = os.path.relpath(file_path, start=source_dir)
-            zipf.write(file_path, arc_path)
+            try:
+                zipf.write(file_path, arc_path)
+            except:
+                continue
 
 
 def zip_repisitory(project_id: int) -> None:

@@ -58,7 +58,7 @@ def dict_to_git_project(project: dict, project_type: ProjectType) -> GitProject:
     return GitProject(
         id=project["id"],
         type=project_type,
-        ssh_url=project["ssh_url_to_repo"],
+        ssh_url=project["http_url_to_repo"],
         created_at=project["created_at"],
     )
 
@@ -93,7 +93,7 @@ def get_forks(project: GitProject) -> list[GitProject]:
         response.raise_for_status()
     projects = response.json()
     projects = [dict_to_git_project(proj, project.type) for proj in projects]
-    time.sleep(5)
+    # time.sleep(5)
     return projects
 
 
