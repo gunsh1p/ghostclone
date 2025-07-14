@@ -5,6 +5,7 @@ import re
 from urllib.parse import quote_plus
 import zipfile
 import time
+import logging
 
 from gitlab import (
     GitProject,
@@ -112,10 +113,14 @@ def get_final_readme(content: str) -> str:
 
 
 def get_readme() -> str:
-    with open("tmp/README.md", "r") as file:
-        content = file.read()
-    readme = get_final_readme(content)
-    return readme
+    try:
+        with open("tmp/README.md", "r") as file:
+            content = file.read()
+        readme = get_final_readme(content)
+        return readme
+    except Exception as e:
+        logging.warning(f"Faild to read README.md: {str(e)}")
+        return "empty"
 
 
 def get_tech_task(project: GitProject) -> str:
@@ -135,7 +140,8 @@ def create_zip_exclude_git(source_dir, zipf: zipfile.ZipFile) -> None:
             arc_path = os.path.relpath(file_path, start=source_dir)
             try:
                 zipf.write(file_path, arc_path)
-            except:
+            except Exception as e:
+                logging.warning(f"Faild to zip file/directory: {str(e)}")
                 continue
 
 
