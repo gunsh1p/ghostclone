@@ -22,14 +22,15 @@ def main():
     total_forks_count = sum(len(v) for v in forks.values())
     logging.info(f"Recieved {total_forks_count} forks")
 
-    parsed_projects = []
+    parsed_projects: list[ParsedProject] = []
 
     for task_proj, proj_forks in forks.items():
         tech_task = get_tech_task(task_proj)
-        temp_parsed_projects: list[ParsedProject] = [
-            get_parsed_project(proj_fork, tech_task) for proj_fork in proj_forks
-        ]
-        parsed_projects.extend(temp_parsed_projects)
+        for proj_fork in proj_forks:
+            parsed_proj = get_parsed_project(proj_fork, tech_task)
+            if parsed_proj is None:
+                continue
+            parsed_projects.append(parsed_proj)
     for parsed_proj in parsed_projects:
         pack_parsed_project(parsed_proj)
     pack_folder()

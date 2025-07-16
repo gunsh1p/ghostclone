@@ -156,14 +156,21 @@ def delete_repo() -> None:
     os.system("rm -rf tmp/")
 
 
-def get_parsed_project(project: GitProject, tech_task: str) -> ParsedProject:
-    clone_repo(project.ssh_url)
-    branch = find_dev_repo()
-    commits_logs = fetch_commits_logs(branch)
-    pipelines = get_pipelines(project.id)
-    zip_repisitory(project.id)
-    delete_repo()
-    time.sleep(5)
-    return ParsedProject(
-        id=project.id, tech_task=tech_task, commits_logs=commits_logs, pipelines=pipelines
-    )
+def get_parsed_project(project: GitProject, tech_task: str) -> ParsedProject | None:
+    try:
+        clone_repo(project.ssh_url)
+        branch = find_dev_repo()
+        commits_logs = fetch_commits_logs(branch)
+        pipelines = get_pipelines(project.id)
+        zip_repisitory(project.id)
+        time.sleep(5)
+    except Exception as e:
+        logging.wawrning(f"Faile to parse {project.id} project: {str(e)}")
+    finally:
+        delete_repo()
+    try:
+        return ParsedProject(
+            id=project.id, tech_task=tech_task, commits_logs=commits_logs, pipelines=pipelines
+        )
+    except NameError:
+        return None
